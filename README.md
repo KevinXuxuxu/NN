@@ -13,5 +13,6 @@ Deep learning framework written with Python/Numpy for learning purpose.
     - LSTM (?)
 - Performance benchmark
 - Better unit/integration testing (how?)
-- Introduce Bazel
+- ~~Introduce Bazel~~
 - Investigate CI and devops
+- Remove torch/torchvision dependency from mnist example
