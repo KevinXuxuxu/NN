@@ -1,6 +1,6 @@
 import numpy as np
 
-from activation import Activation, Sigmoid
+from src.activation import Activation, Sigmoid
 
 class Layer:
 

@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 
 from typing import List
-from layer import Layer
+from src.layer import Layer
 
 
 class LayerTest(unittest.TestCase):

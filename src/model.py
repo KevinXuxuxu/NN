@@ -1,9 +1,9 @@
 import logging
 import numpy as np
 
-from cost import Cost, MSE
-from layer import Layer
-from activation import Activation, Sigmoid
+from src.cost import Cost, MSE
+from src.layer import Layer
+from src.activation import Activation, Sigmoid
 
 DEFAULT_LEARNING_RATE = 0.001
 
