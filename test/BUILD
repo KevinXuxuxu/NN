@@ -8,3 +8,11 @@ py_test(
         "//src:nn_src",
     ],
 )
+
+py_test(
+    name = "model_test",
+    srcs = ["model_test.py"],
+    deps = [
+        "//src:nn_src",
+    ],
+)
