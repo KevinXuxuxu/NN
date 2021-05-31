@@ -14,5 +14,6 @@ Deep learning framework written with Python/Numpy for learning purpose.
 - Performance benchmark
 - Better unit/integration testing (how?)
 - ~~Introduce Bazel~~
+    - Build Bazel dependencies (e.g. python_rules) into docker image
 - Investigate CI and devops
 - Remove torch/torchvision dependency from mnist example
