@@ -18,4 +18,6 @@ RUN echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.
 RUN apt update \
   && apt install -y bazel
 
+WORKDIR /nn
+
 CMD /bin/bash
