@@ -8,11 +8,15 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
 
 - (Prerequisite: docker should be installed) Run the `docker_run.sh` script in the root directory. Docker will pull the image from docker hub if it's your first time, which might take a while depending on your network.
     ```shell
-    # docker run -v `pwd`:/nn -p 8888:8888 --rm -it fzxu/nn /bin/bash
+    # docker run \
+    #     -v `pwd`:/nn \
+    #     -v `pwd`/bazel-cache:/root/.cache/bazel \
+    #     -p 8888:8888 \
+    #     --rm -it fzxu/nn /bin/bash
     ./docker_run.sh
     ```
-    - This docker run command mount the repo dir into the container and mapped 8888 port for jupyter notebook usesage.
-- Once the container is started, cd to `/nn` which is the mounting point of your repo dir. Now you can mess around with code, and use bazel:
+    - This docker run command mount the repo dir and the bazel cache dir into the container, and also mapped 8888 port for jupyter notebook usesage.
+- Once the container is started, you will be in `/nn` directory which is the mounting point of your repo dir. Now you can mess around with code, and use bazel:
     - To simply build the source code (which is usually not needed as there's no binary/executables in it)
     ```shell
     bazel build //src:nn_src
