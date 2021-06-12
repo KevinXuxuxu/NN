@@ -97,7 +97,7 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
 - Performance benchmark
 - Better unit/integration testing (how?)
 - ~~Introduce Bazel~~
-    - Build Bazel dependencies (e.g. python_rules) into docker image
+    - ~~Build Bazel dependencies (e.g. python_rules) into docker image~~
 - Investigate CI and devops
     - ~~Add docker support~~
     - explore CI options
