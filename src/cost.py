@@ -19,8 +19,8 @@ class LogSoftmax(Cost):
 
     @classmethod
     def eval(cls, y_prime: np.ndarray, y: np.ndarray) -> float:
-        return -y[y_prime == 1][0] + np.log(np.exp(y).sum())
+        return (-y_prime[y == 1] + np.log(np.exp(y_prime).sum(axis=0))).sum()
 
     @classmethod
     def grad(cls, y_prime: np.ndarray, y: np.ndarray) -> np.ndarray:
-        return -1 + np.exp(y[y_prime == 1][0]) / np.exp(y).sum()
+        return -(y == 1).astype('float') + np.exp(y_prime) / np.exp(y_prime).sum(axis=0)
