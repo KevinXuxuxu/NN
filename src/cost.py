@@ -24,3 +24,24 @@ class LogSoftmax(Cost):
     @classmethod
     def grad(cls, y_prime: np.ndarray, y: np.ndarray) -> np.ndarray:
         return -(y == 1).astype('float') + np.exp(y_prime) / np.exp(y_prime).sum(axis=0)
+
+class CrossEntropyWithSoftmax(Cost):
+    '''
+        reference: https://deepnotes.io/softmax-crossentropy#cross-entropy-loss    
+    '''
+
+    @classmethod
+    def _softmax(cls, input: np.ndarray) -> np.ndarray:
+        exp = np.exp(input)
+        return exp / exp.sum(axis=0)
+
+    @classmethod
+    def eval(cls, y_prime: np.ndarray, y: np.ndarray) -> float:
+        m = y.shape[0]
+        p = cls._softmax(y_prime)
+        log_likelihood = -np.log(np.max(p*y, axis=0))
+        return np.sum(log_likelihood) / m
+    
+    @classmethod
+    def grad(cls, y_prime: np.ndarray, y: np.ndarray) -> np.ndarray:
+        return (cls._softmax(y_prime) - y) / y.shape[0]
