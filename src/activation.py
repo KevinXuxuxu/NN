@@ -29,3 +29,15 @@ class Identity(Activation):
     def grad(cls, x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
         return 1.
 
+
+class ReLU(Activation):
+
+    @classmethod
+    def eval(cls, x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        rtn = x.copy()
+        rtn[x < 0.] = 0.
+        return rtn
+
+    @classmethod
+    def grad(cls, x: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+        return (x > 0).astype('float')
