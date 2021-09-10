@@ -12,8 +12,8 @@ class Layer:
 
     def connect(self, prev_layer: 'Layer'):
         self.prev, prev_layer.next = prev_layer, self
-        self._w = np.random.random((self.n, prev_layer.n)) # weights
-        self._b = np.random.random((self.n, 1)) # bias
+        self._w = np.random.random((self.n, prev_layer.n)) / 5. - .1 # weights
+        self._b = np.ones((self.n, 1)) * 0.1 # bias
 
     def forward_pass(self):
         # a_L = act(w_L \dot a_(L-1) + b_L)
