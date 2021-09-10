@@ -91,7 +91,10 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
 - Refactor to introduce operator concept (need design)
 - Add more kinds of operators to implement/test more algorithms
     - Other activation functions
+        - ~~ReLU~~
     - Other cost functions
+        - ~~cross entropy with softmax~~
+        - ~~log softmax~~
     - Convolution layer
     - LSTM (?)
 - Performance benchmark
