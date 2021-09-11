@@ -87,7 +87,7 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
         ```
 ### TODO
 
-- Transpose layer activation to be more intuitive
+- ~~Transpose layer activation to be more intuitive~~
 - Refactor to introduce operator concept (need design)
 - Add more kinds of operators to implement/test more algorithms
     - Other activation functions
