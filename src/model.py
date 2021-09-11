@@ -22,7 +22,7 @@ class Model:
         return self
 
     def inference(self, _input: np.ndarray) -> np.ndarray:
-        if _input.shape[0] != self._layers[0].n:
+        if _input.shape[1] != self._layers[0].n:
             raise Exception('input shape {} does not match first layer dimension {}'.format(
                 _input.shape, self._layers[0].n))
         self._layers[0].a = _input
