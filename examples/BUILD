@@ -8,5 +8,6 @@ py_binary(
     ],
     deps = [
         "//src:nn_src",
+        "//data/MNIST:mnist_csv_loader"
     ],
 )
