@@ -7,6 +7,7 @@ py_library(
         "activation.py",
         "cost.py",
         "layer.py",
-        "model.py"
+        "model.py",
+        "utils.py",
     ],
 )
