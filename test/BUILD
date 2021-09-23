@@ -16,3 +16,11 @@ py_test(
         "//src:nn_src",
     ],
 )
+
+py_test(
+    name = "operator_test",
+    srcs = ["operator_test.py"],
+    deps = [
+        "//src:nn_src",
+    ],
+)

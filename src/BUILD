@@ -9,5 +9,6 @@ py_library(
         "layer.py",
         "model.py",
         "utils.py",
+        "operator.py",
     ],
 )
