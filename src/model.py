@@ -27,17 +27,17 @@ class Model:
         return self
 
     def inference(self, _input: np.ndarray) -> np.ndarray:
-        check_shape(_input, (None, self._input_dim), axis=1)
+        check_shape(_input.shape, (None, self._input_dim), axis=1)
         self._layers[0].a = _input
         self._layers[0].forward_pass()
         return self._layers[-1].a
 
     def get_cost(self, ground_truth: np.ndarray) -> float:
-        check_shape(self._layers[-1].a, ground_truth.shape)
+        check_shape(self._layers[-1].a.shape, ground_truth.shape)
         return self._cost.eval(self._layers[-1].a, ground_truth)
 
     def back_prop(self, ground_truth: np.ndarray):
-        check_shape(self._layers[-1].a, ground_truth.shape)
+        check_shape(self._layers[-1].a.shape, ground_truth.shape)
         y_grad = self._cost.grad(self._layers[-1].a, ground_truth)
         self._layers[-1].back_prop(y_grad)
 
@@ -50,14 +50,14 @@ class Model:
               epochs: int = 10,
               get_accuracy: Callable[[np.ndarray, np.ndarray], float] = None):
         # check input dimension etc. and initialize parameters
-        check_shape(train_set[0], (None, self._input_dim), axis=1)
-        check_shape(train_set[1], (None, self._output_dim), axis=1)
-        check_shape(test_set[0], (None, self._input_dim), axis=1)
-        check_shape(test_set[1], (None, self._output_dim), axis=1)
+        check_shape(train_set[0].shape, (None, self._input_dim), axis=1)
+        check_shape(train_set[1].shape, (None, self._output_dim), axis=1)
+        check_shape(test_set[0].shape, (None, self._input_dim), axis=1)
+        check_shape(test_set[1].shape, (None, self._output_dim), axis=1)
         if not validation_set:
             validation_set = test_set
-        check_shape(validation_set[0], (None, self._input_dim), axis=1)
-        check_shape(validation_set[1], (None, self._output_dim), axis=1)
+        check_shape(validation_set[0].shape, (None, self._input_dim), axis=1)
+        check_shape(validation_set[1].shape, (None, self._output_dim), axis=1)
         if learning_rate is not None:
             self._rate = learning_rate
         if not get_accuracy:

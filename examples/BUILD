@@ -7,6 +7,9 @@ py_binary(
         "jupyter.py",
     ],
     deps = [
+        "//src/operator:activation",
+        "//src/operator:common",
+        "//src/operator:operator",
         "//src:nn_src",
         "//data/MNIST:mnist_csv_loader"
     ],

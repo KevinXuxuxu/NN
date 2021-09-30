@@ -9,6 +9,12 @@ py_library(
         "layer.py",
         "model.py",
         "utils.py",
-        "operator.py",
     ],
+)
+
+py_library(
+    name = "utils",
+    srcs = [
+        "utils.py"
+    ]
 )

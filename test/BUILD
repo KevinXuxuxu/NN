@@ -21,6 +21,8 @@ py_test(
     name = "operator_test",
     srcs = ["operator_test.py"],
     deps = [
-        "//src:nn_src",
+        "//src/operator:activation",
+        "//src/operator:common",
+        "//src/operator:operator",
     ],
 )
