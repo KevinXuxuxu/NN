@@ -5,14 +5,14 @@ from src.operator.operator import Operator
 SIGMOID_INPUT_CAP = 700.
 
 
-class Activation(Operator):
+class BroadcastOperator(Operator):
 
     def __init__(self):
         super().__init__([], [])
 
     def register(self, pred: Operator):
         if len(self.preds) == 1:
-            raise Exception('Multiple input not supported for Activations')
+            raise Exception('Multiple input not supported for broadcat operator')
         # pass the input shape as output shape
         self.oshape = pred.oshape
         return super().register(pred)
@@ -34,7 +34,7 @@ class Activation(Operator):
         super()._back_prop()
 
 
-class Sigmoid(Activation):
+class Sigmoid(BroadcastOperator):
 
     def _eval(self, x: np.ndarray) -> np.ndarray:
         return 1. / (1. + np.exp(np.clip(-x, -SIGMOID_INPUT_CAP, SIGMOID_INPUT_CAP)))
@@ -43,7 +43,7 @@ class Sigmoid(Activation):
         return self._eval(x) * (1. - self._eval(x))
 
 
-class Identity(Activation):
+class Identity(BroadcastOperator):
 
     @classmethod
     def eval(cls, x: np.ndarray) -> np.ndarray:
@@ -54,7 +54,7 @@ class Identity(Activation):
         return 1.
 
 
-class ReLU(Activation):
+class ReLU(BroadcastOperator):
 
     @classmethod
     def eval(cls, x: np.ndarray) -> np.ndarray:
