@@ -7,7 +7,7 @@ class Operator:
 
     def __init__(self, ishape: List[int], oshape: List[int]):
         self.ishape, self.oshape = tuple(ishape), tuple(oshape)
-        self.preds, self.succs= [], []
+        self.preds, self.succs = [], []
         self.forward_pass_count, self.back_prod_count = 0, 0
 
     def _forward_pass(self):
