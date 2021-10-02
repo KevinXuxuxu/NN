@@ -49,4 +49,3 @@ class Softmax(Normalizer):
         do_dx = o_kd_tensor - oij_tensor
         self.grad = np.sum(dL_do.reshape((n, m, 1)) * do_dx, axis=1) # dL_dx
         super()._back_prop()
-        

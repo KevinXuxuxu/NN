@@ -45,23 +45,19 @@ class Sigmoid(BroadcastOperator):
 
 class Identity(BroadcastOperator):
 
-    @classmethod
-    def eval(cls, x: np.ndarray) -> np.ndarray:
+    def _eval(cls, x: np.ndarray) -> np.ndarray:
         return x
 
-    @classmethod
-    def grad(cls, x: np.ndarray) -> np.ndarray:
+    def _grad(cls, x: np.ndarray) -> np.ndarray:
         return 1.
 
 
 class ReLU(BroadcastOperator):
 
-    @classmethod
-    def eval(cls, x: np.ndarray) -> np.ndarray:
+    def _eval(cls, x: np.ndarray) -> np.ndarray:
         rtn = x.copy()
         rtn[x < 0.] = 0.
         return rtn
 
-    @classmethod
-    def grad(cls, x: np.ndarray) -> np.ndarray:
+    def _grad(cls, x: np.ndarray) -> np.ndarray:
         return (x > 0).astype('float')

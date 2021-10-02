@@ -16,7 +16,7 @@ py_library(
     deps = [
         ":operator",
         "//src:utils",
-    ]
+    ],
 )
 
 py_library(
@@ -26,5 +26,26 @@ py_library(
     ],
     deps = [
         ":operator"
-    ]
+    ],
+)
+
+py_library(
+    name = "normalizer",
+    srcs = [
+        "normalizer.py",
+    ],
+    deps = [
+        ":operator",
+    ],
+)
+
+py_library(
+    name = "loss",
+    srcs = [
+        "loss.py",
+    ],
+    deps = [
+        ":operator",
+        "//src:utils",
+    ],
 )
