@@ -29,7 +29,7 @@ class BroadcastOperator(Operator):
 
     def _back_prop(self):
         dL_do = self._aggregate_grad()
-        do_dh = self._grad(self.output)
+        do_dh = self._grad(self.preds[0].output)
         self.grad = dL_do * do_dh
         super()._back_prop()
 

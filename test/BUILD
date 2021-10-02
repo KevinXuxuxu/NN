@@ -23,6 +23,7 @@ py_test(
     deps = [
         "//src/operator:activation",
         "//src/operator:common",
+        "//src/operator:loss",
         "//src/operator:operator",
     ],
 )

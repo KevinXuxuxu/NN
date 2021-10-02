@@ -44,11 +44,11 @@ class MSE(Loss):
     def _forward_pass(self):
         if self.y.shape != self.gt.shape:
             raise ValueError('Model output and ground truth have different shape')
-        self.output = ((self.gt - self.y) ** 2).sum()
+        self.output = ((self.y - self.gt) ** 2).sum()
         # super()._forward_pass()
 
     def _back_prop(self):
         if self.y.shape != self.gt.shape:
             raise ValueError('Model output and ground truth have different shape')
-        self.grad = 2 * (self.gt - self.y)
+        self.grad = 2 * (self.y - self.gt)
         super()._back_prop()

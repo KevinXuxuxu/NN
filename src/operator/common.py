@@ -25,8 +25,8 @@ class MatMul(ParameterizedOperator):
     def _back_prop(self):
         dL_do = self._aggregate_grad()
         dL_dw = np.einsum('ki,kj', self.preds[0].output, dL_do)
-        self._w -= self._rate * dL_dw
         self.grad = np.einsum('ik,jk', dL_do, self._w)
+        self._w -= self._rate * dL_dw
         super()._back_prop()
 
 
@@ -49,7 +49,7 @@ class Bias(ParameterizedOperator):
 
     def _back_prop(self):
         dL_do = self._aggregate_grad()
-        dL_db = np.sum(dL_do, acis=0)
+        dL_db = np.sum(dL_do, axis=0)
         self._b -= self._rate * dL_db
         self.grad = dL_do
         super()._back_prop()

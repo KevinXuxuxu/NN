@@ -1,9 +1,11 @@
 import numpy as np
 import unittest
 
-from src.operator.operator import Operator
+from src.operator.operator import Operator, ParameterizedOperator
 from src.operator.common import Bias, MatMul
 from src.operator.activation import Sigmoid
+from src.operator.loss import MSE
+from typing import List
 
 
 class Plus(Operator):
@@ -43,11 +45,15 @@ class OperatorTest(unittest.TestCase):
             self.assertEqual(x.output, expected_result[i])
             self.assertEqual(x.forward_pass_count, 0)
 
-    def test_forward_pass(self):
-        # initialize
-        # _input - MatMul1 - Bias1 - Sigmoid1 - MatMul2 - Bias2 - Sigmoid2
+    def _prepare_test_case(self) -> List[Operator]:
+        # _input - MatMul1 - Bias1 - Sigmoid1 - MatMul2 - Bias2 - Sigmoid2 - MSE
+        #                                                                  /
+        #                                                    _ground_truth
+        ParameterizedOperator.rate = 1.
         _input = Operator([], [2])
         _input.output = np.array([[.7, 2.]])
+        _ground_truth = Operator([], [2])
+        _ground_truth.output = np.array([[1., 0.]])
         mm1 = MatMul([2], [3])
         mm1._w = np.array(
             [
@@ -75,6 +81,15 @@ class OperatorTest(unittest.TestCase):
         b2.register(mm2)
         a2 = Sigmoid()
         a2.register(b2)
+        loss = MSE([2])
+        loss.register_ground_truth(_ground_truth)
+        _ground_truth._forward_pass()
+        loss.register_output(a2)
+        return [_input, _ground_truth, mm1, b1, a1, mm2, b2, a2, loss]
+
+    def test_forward_pass(self):
+        # initialize
+        _input, _, _, b1, a1, _, b2, a2, _ = self._prepare_test_case()
 
         # forward pass
         _input._forward_pass()
@@ -91,7 +106,32 @@ class OperatorTest(unittest.TestCase):
         self.assertAlmostEqual(a2.output[0][0], 0.7343880132771364)
         self.assertAlmostEqual(a2.output[0][1], 0.949829262885629)
     
-    # TODO: add test_back_prop after cost operators are implemented
+    def test_back_prop(self):
+        # initialize
+        _input, _, mm1, b1, _, mm2, b2, _, loss = self._prepare_test_case()
+        _input._forward_pass()
+
+        # back prop
+        loss._back_prop()
+
+        # check result
+        self.assertAlmostEqual(b2._b[0], 0.10362174841852187)
+        self.assertAlmostEqual(b2._b[1], -0.09052563259036336)
+        self.assertAlmostEqual(mm2._w[0][0], 0.30000504528338146)
+        self.assertAlmostEqual(mm2._w[1][0], 1.0862151997839324)
+        self.assertAlmostEqual(mm2._w[2][0], 0.29583352646265637)
+        self.assertAlmostEqual(mm2._w[0][1], -1.500004407641028)
+        self.assertAlmostEqual(mm2._w[1][1], 0.12468100935893892)
+        self.assertAlmostEqual(mm2._w[2][1], 2.9162782838660672)
+        self.assertAlmostEqual(b1._b[0], 8.12465095e-06)
+        self.assertAlmostEqual(b1._b[1], 1.19521274e-02)
+        self.assertAlmostEqual(b1._b[2], -1.74370284e-02)
+        self.assertAlmostEqual(mm1._w[0][0], 0.10000569)
+        self.assertAlmostEqual(mm1._w[1][0], -4.99998375)
+        self.assertAlmostEqual(mm1._w[0][1], 2.00836649)
+        self.assertAlmostEqual(mm1._w[1][1], 0.12390425)
+        self.assertAlmostEqual(mm1._w[0][2], -0.71220592)
+        self.assertAlmostEqual(mm1._w[1][2], 1.46512594)
 
 
 if __name__ == '__main__':

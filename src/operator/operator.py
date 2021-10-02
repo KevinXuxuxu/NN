@@ -38,7 +38,7 @@ class Operator:
 
     def _aggregate_grad(self) -> np.ndarray:
         # sum up gradients from all successors for back prop
-        return np.sum(np.array([succ.grad for succ in self.succs]))
+        return np.sum(np.array([succ.grad for succ in self.succs]), axis=0)
 
 
 class ParameterizedOperator(Operator):
