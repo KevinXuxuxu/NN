@@ -4,7 +4,8 @@ import unittest
 from src.operator.operator import Operator, ParameterizedOperator
 from src.operator.common import Bias, MatMul
 from src.operator.activation import Sigmoid
-from src.operator.loss import MSE
+from src.operator.loss import MSE, CrossEntropy, CrossEntropyWithSoftmax
+from src.operator.normalizer import Softmax
 from typing import List
 
 
@@ -55,12 +56,10 @@ class OperatorTest(unittest.TestCase):
         _ground_truth = Operator([], [2])
         _ground_truth.output = np.array([[1., 0.]])
         mm1 = MatMul([2], [3])
-        mm1._w = np.array(
-            [
-                [.1, 2, -.7],
-                [-5, .1, 1.5]
-            ]
-        )
+        mm1._w = np.array([
+            [.1, 2, -.7],
+            [-5, .1, 1.5]
+        ])
         mm1.register(_input)
         b1 = Bias([3], [3])
         b1._b = np.zeros(3)
@@ -68,13 +67,11 @@ class OperatorTest(unittest.TestCase):
         a1 = Sigmoid()
         a1.register(b1)
         mm2 = MatMul([3], [2])
-        mm2._w = np.array(
-            [
-                [.3, -1.5],
-                [1, .2],
-                [.2, 3]
-            ]
-        )
+        mm2._w = np.array([
+            [.3, -1.5],
+            [1, .2],
+            [.2, 3]
+        ])
         mm2.register(a1)
         b2 = Bias([2],[2])
         b2._b = np.zeros(2)
@@ -87,6 +84,13 @@ class OperatorTest(unittest.TestCase):
         loss.register_output(a2)
         return [_input, _ground_truth, mm1, b1, a1, mm2, b2, a2, loss]
 
+    def _assert_matrices_equal(self, a: np.ndarray, b: np.ndarray):
+        self.assertEqual(a.shape, b.shape)
+        n = np.prod(a.shape)
+        # compare flattened
+        for i in range(n):
+            self.assertAlmostEqual(a.reshape((n))[i], b.reshape((n))[i])
+
     def test_forward_pass(self):
         # initialize
         _input, _, _, b1, a1, _, b2, a2, _ = self._prepare_test_case()
@@ -95,16 +99,13 @@ class OperatorTest(unittest.TestCase):
         _input._forward_pass()
 
         # check result
-        self.assertAlmostEqual(b1.output[0][0], -9.93)
-        self.assertAlmostEqual(b1.output[0][1], 1.6)
-        self.assertAlmostEqual(b1.output[0][2], 2.51)
-        self.assertAlmostEqual(a1.output[0][0], 4.8689425323061825e-05)
-        self.assertAlmostEqual(a1.output[0][1], 0.8320183851339245)
-        self.assertAlmostEqual(a1.output[0][2], 0.9248398905178734)
-        self.assertAlmostEqual(b2.output[0][0], 1.0170009700650962)
-        self.assertAlmostEqual(b2.output[0][1], 2.9408503144424207)
-        self.assertAlmostEqual(a2.output[0][0], 0.7343880132771364)
-        self.assertAlmostEqual(a2.output[0][1], 0.949829262885629)
+        self._assert_matrices_equal(b1.output, np.array([[-9.93, 1.6, 2.51]]))
+        self._assert_matrices_equal(a1.output, np.array([
+            [4.8689425323061825e-05, 0.8320183851339245, 0.9248398905178734]]))
+        self._assert_matrices_equal(b2.output, np.array([
+            [1.0170009700650962, 2.9408503144424207]]))
+        self._assert_matrices_equal(a2.output, np.array([
+            [0.7343880132771364, 0.949829262885629]]))
     
     def test_back_prop(self):
         # initialize
@@ -115,23 +116,51 @@ class OperatorTest(unittest.TestCase):
         loss._back_prop()
 
         # check result
-        self.assertAlmostEqual(b2._b[0], 0.10362174841852187)
-        self.assertAlmostEqual(b2._b[1], -0.09052563259036336)
-        self.assertAlmostEqual(mm2._w[0][0], 0.30000504528338146)
-        self.assertAlmostEqual(mm2._w[1][0], 1.0862151997839324)
-        self.assertAlmostEqual(mm2._w[2][0], 0.29583352646265637)
-        self.assertAlmostEqual(mm2._w[0][1], -1.500004407641028)
-        self.assertAlmostEqual(mm2._w[1][1], 0.12468100935893892)
-        self.assertAlmostEqual(mm2._w[2][1], 2.9162782838660672)
-        self.assertAlmostEqual(b1._b[0], 8.12465095e-06)
-        self.assertAlmostEqual(b1._b[1], 1.19521274e-02)
-        self.assertAlmostEqual(b1._b[2], -1.74370284e-02)
-        self.assertAlmostEqual(mm1._w[0][0], 0.10000569)
-        self.assertAlmostEqual(mm1._w[1][0], -4.99998375)
-        self.assertAlmostEqual(mm1._w[0][1], 2.00836649)
-        self.assertAlmostEqual(mm1._w[1][1], 0.12390425)
-        self.assertAlmostEqual(mm1._w[0][2], -0.71220592)
-        self.assertAlmostEqual(mm1._w[1][2], 1.46512594)
+        self._assert_matrices_equal(b2._b, np.array(
+            [0.10362174841852187, -0.09052563259036336]))
+        self._assert_matrices_equal(mm2._w, np.array([
+            [0.30000504528338146, -1.500004407641028],
+            [1.0862151997839324, 0.12468100935893892],
+            [0.29583352646265637, 2.9162782838660672]]))
+        self._assert_matrices_equal(b1._b, np.array(
+            [8.12465095e-06, 1.19521274e-02, -1.74370284e-02]))
+        self._assert_matrices_equal(mm1._w, np.array([
+            [0.10000569, 2.00836649, -0.71220592],
+            [-4.99998375, 0.12390425, 1.46512594]]))
+
+    def test_cross_entropy_and_softmax(self):
+        #        Softmax - CrossEntropy
+        #       /          /
+        # _input    _ground_truth
+        #       \         \
+        #        CrossEntropyWithSoftmax
+        _input = Operator([], [3])
+        _input.output = np.array([
+            [1, 4, 20],
+            [4, 0.2, 7],
+            [12, 13, 1.]
+        ])
+        _ground_truth = Operator([], [3])
+        _ground_truth.output = np.array([
+            [0, 0, 1.],
+            [0, 1., 0],
+            [1., 0, 0]
+        ])
+        sm = Softmax()
+        sm.register(_input)
+        ce = CrossEntropy([3])
+        ce.register_output(sm)
+        ce.register_ground_truth(_ground_truth)
+        cewsm = CrossEntropyWithSoftmax([3])
+        cewsm.register_output(_input)
+        cewsm.register_ground_truth(_ground_truth)
+        _ground_truth._forward_pass()
+        _input._forward_pass()
+        ce._back_prop()
+        cewsm._back_prop()
+
+        self.assertAlmostEqual(ce.output, cewsm.output)
+        self._assert_matrices_equal(sm.grad, cewsm.grad)
 
 
 if __name__ == '__main__':

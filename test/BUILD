@@ -24,6 +24,7 @@ py_test(
         "//src/operator:activation",
         "//src/operator:common",
         "//src/operator:loss",
+        "//src/operator:normalizer",
         "//src/operator:operator",
     ],
 )

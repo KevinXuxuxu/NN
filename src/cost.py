@@ -15,6 +15,7 @@ class MSE(Cost):
     def grad(cls, y_prime: np.ndarray, y: np.ndarray) -> np.ndarray:
         return 2 * (y_prime - y)
 
+
 class LogSoftmax(Cost):
 
     @classmethod
@@ -24,6 +25,7 @@ class LogSoftmax(Cost):
     @classmethod
     def grad(cls, y_prime: np.ndarray, y: np.ndarray) -> np.ndarray:
         return -(y == 1).astype('float') + np.exp(y_prime) / np.exp(y_prime).sum(axis=1)[:, np.newaxis]
+
 
 class CrossEntropyWithSoftmax(Cost):
     '''
