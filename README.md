@@ -100,6 +100,7 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
         - BN
     - Convolution/pooling layer
     - LSTM (?)
+    - Utility operators: split, merge, flatten, etc.
 - Performance benchmark
 - Better unit/integration testing (how?)
 - ~~Introduce Bazel~~
@@ -107,4 +108,4 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
 - Investigate CI and devops
     - ~~Add docker support~~
     - explore CI options (CI server for auto test run before merge)
-- Remove torch/torchvision dependency from mnist example
+- ~~Remove torch/torchvision dependency from mnist example~~
