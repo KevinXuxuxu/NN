@@ -7,12 +7,12 @@ class Normalizer(Operator):
     def __init__(self):
         super().__init__([], [])
 
-    def register(self, pred: Operator):
+    def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
             raise Exception('Multiple input not supported for normalizer')
         # pass the input shape as output shape
         self.oshape = pred.oshape
-        return super().register(pred)
+        return super().add_pred(pred)
 
     def _eval(self, x: np.ndarray) -> np.ndarray:
         raise NotImplemented('_eval')
@@ -24,10 +24,10 @@ class Normalizer(Operator):
 
 class Softmax(Normalizer):
 
-    def register(self, pred: Operator):
+    def add_pred(self, pred: Operator):
         if len(pred.oshape) > 1:
             raise ValueError('Multi-dimensional input not supported for softmax')
-        super().register(pred)
+        super().add_pred(pred)
 
     def _eval(self, x: np.ndarray) -> np.ndarray:
         exp = np.exp(x)

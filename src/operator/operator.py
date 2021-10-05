@@ -32,7 +32,7 @@ class Operator:
             self._back_prop()
             self.back_prod_count = 0
 
-    def register(self, pred: 'Operator'):
+    def add_pred(self, pred: 'Operator'):
         self.preds.append(pred)
         pred.succs.append(self)
 

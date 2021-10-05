@@ -10,12 +10,12 @@ class BroadcastOperator(Operator):
     def __init__(self):
         super().__init__([], [])
 
-    def register(self, pred: Operator):
+    def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
             raise Exception('Multiple input not supported for broadcat operator')
         # pass the input shape as output shape
         self.oshape = pred.oshape
-        return super().register(pred)
+        return super().add_pred(pred)
 
     def _eval(self, x: np.ndarray) -> np.ndarray:
         raise NotImplemented('_eval')

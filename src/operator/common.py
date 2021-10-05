@@ -5,18 +5,18 @@ from src.operator.operator import Operator, ParameterizedOperator
 from src.utils import check_shape
 
 
-class MatMul(ParameterizedOperator):
+class Linear(ParameterizedOperator):
     
     def __init__(self, ishape: List[int], oshape: List[int]):
         super().__init__(ishape, oshape)
         # weights initialized to [-0.1, 0.1]
         self._w = np.random.random((ishape[0], oshape[0])) / 5. - .1
 
-    def register(self, pred: Operator):
+    def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
-            raise Exception('Multiple input not supported for MatMul')
+            raise Exception('Multiple input not supported for Linear')
         check_shape(pred.oshape, self.ishape)
-        super().register(pred)
+        super().add_pred(pred)
 
     def _forward_pass(self):
         self.output = np.matmul(self.preds[0].output, self._w)
@@ -37,11 +37,11 @@ class Bias(ParameterizedOperator):
         # bias initialized to 0.1
         self._b = np.ones(ishape) * .1
 
-    def register(self, pred: Operator):
+    def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
             raise Exception('Multiple input not supported for bias')
         check_shape(pred.oshape, self.ishape)
-        super().register(pred)
+        super().add_pred(pred)
 
     def _forward_pass(self):
         self.output = self.preds[0].output + self._b

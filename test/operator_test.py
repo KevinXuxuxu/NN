@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 
 from src.operator.operator import Operator, ParameterizedOperator
-from src.operator.common import Bias, MatMul
+from src.operator.common import Bias, Linear
 from src.operator.activation import Sigmoid
 from src.operator.loss import MSE, CrossEntropy, CrossEntropyWithSoftmax
 from src.operator.normalizer import Softmax
@@ -26,19 +26,19 @@ class OperatorTest(unittest.TestCase):
     def test_forward_pass_topo_sort(self):
         expected_result = [0, 1, 2, 5, 9, 14, 23, 31, 53]
         a = [Plus(i) for i in range(9)]
-        a[1].register(a[0])
-        a[2].register(a[0])
-        a[6].register(a[1])
-        a[7].register(a[1])
-        a[6].register(a[2])
-        a[3].register(a[2])
-        a[6].register(a[3])
-        a[4].register(a[3])
-        a[6].register(a[4])
-        a[5].register(a[4])
-        a[8].register(a[5])
-        a[7].register(a[6])
-        a[8].register(a[7])
+        a[1].add_pred(a[0])
+        a[2].add_pred(a[0])
+        a[6].add_pred(a[1])
+        a[7].add_pred(a[1])
+        a[6].add_pred(a[2])
+        a[3].add_pred(a[2])
+        a[6].add_pred(a[3])
+        a[4].add_pred(a[3])
+        a[6].add_pred(a[4])
+        a[5].add_pred(a[4])
+        a[8].add_pred(a[5])
+        a[7].add_pred(a[6])
+        a[8].add_pred(a[7])
         a[0].output = 0
         for succ in a[0].succs:
             succ.forward_pass()
@@ -47,7 +47,7 @@ class OperatorTest(unittest.TestCase):
             self.assertEqual(x.forward_pass_count, 0)
 
     def _prepare_test_case(self) -> List[Operator]:
-        # _input - MatMul1 - Bias1 - Sigmoid1 - MatMul2 - Bias2 - Sigmoid2 - MSE
+        # _input - Linear1 - Bias1 - Sigmoid1 - Linear2 - Bias2 - Sigmoid2 - MSE
         #                                                                  /
         #                                                    _ground_truth
         ParameterizedOperator.rate = 1.
@@ -55,33 +55,33 @@ class OperatorTest(unittest.TestCase):
         _input.output = np.array([[.7, 2.]])
         _ground_truth = Operator([], [2])
         _ground_truth.output = np.array([[1., 0.]])
-        mm1 = MatMul([2], [3])
+        mm1 = Linear([2], [3])
         mm1._w = np.array([
             [.1, 2, -.7],
             [-5, .1, 1.5]
         ])
-        mm1.register(_input)
+        mm1.add_pred(_input)
         b1 = Bias([3], [3])
         b1._b = np.zeros(3)
-        b1.register(mm1)
+        b1.add_pred(mm1)
         a1 = Sigmoid()
-        a1.register(b1)
-        mm2 = MatMul([3], [2])
+        a1.add_pred(b1)
+        mm2 = Linear([3], [2])
         mm2._w = np.array([
             [.3, -1.5],
             [1, .2],
             [.2, 3]
         ])
-        mm2.register(a1)
+        mm2.add_pred(a1)
         b2 = Bias([2],[2])
         b2._b = np.zeros(2)
-        b2.register(mm2)
+        b2.add_pred(mm2)
         a2 = Sigmoid()
-        a2.register(b2)
+        a2.add_pred(b2)
         loss = MSE([2])
-        loss.register_ground_truth(_ground_truth)
+        loss.add_ground_truth(_ground_truth)
         _ground_truth._forward_pass()
-        loss.register_output(a2)
+        loss.add_output(a2)
         return [_input, _ground_truth, mm1, b1, a1, mm2, b2, a2, loss]
 
     def _assert_matrices_equal(self, a: np.ndarray, b: np.ndarray):
@@ -147,13 +147,13 @@ class OperatorTest(unittest.TestCase):
             [1., 0, 0]
         ])
         sm = Softmax()
-        sm.register(_input)
+        sm.add_pred(_input)
         ce = CrossEntropy([3])
-        ce.register_output(sm)
-        ce.register_ground_truth(_ground_truth)
+        ce.add_output(sm)
+        ce.add_ground_truth(_ground_truth)
         cewsm = CrossEntropyWithSoftmax([3])
-        cewsm.register_output(_input)
-        cewsm.register_ground_truth(_ground_truth)
+        cewsm.add_output(_input)
+        cewsm.add_ground_truth(_ground_truth)
         _ground_truth._forward_pass()
         _input._forward_pass()
         ce._back_prop()
