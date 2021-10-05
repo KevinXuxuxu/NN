@@ -88,14 +88,17 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
 ### TODO
 
 - ~~Transpose layer activation to be more intuitive~~
-- Refactor to introduce operator concept (need design)
+- Refactor to introduce operator concept (WIP: https://github.com/KevinXuxuxu/NN/pull/11)
 - Add more kinds of operators to implement/test more algorithms
     - Other activation functions
         - ~~ReLU~~
     - Other cost functions
         - ~~cross entropy with softmax~~
         - ~~log softmax~~
-    - Convolution layer
+    - Normalization
+        - ~~Softmax~~
+        - BN
+    - Convolution/pooling layer
     - LSTM (?)
 - Performance benchmark
 - Better unit/integration testing (how?)
@@ -103,5 +106,5 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
     - ~~Build Bazel dependencies (e.g. python_rules) into docker image~~
 - Investigate CI and devops
     - ~~Add docker support~~
-    - explore CI options
+    - explore CI options (CI server for auto test run before merge)
 - Remove torch/torchvision dependency from mnist example
