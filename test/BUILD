@@ -16,3 +16,15 @@ py_test(
         "//src:nn_src",
     ],
 )
+
+py_test(
+    name = "operator_test",
+    srcs = ["operator_test.py"],
+    deps = [
+        "//src/operator:activation",
+        "//src/operator:common",
+        "//src/operator:loss",
+        "//src/operator:normalizer",
+        "//src/operator:operator",
+    ],
+)

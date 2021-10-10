@@ -11,3 +11,10 @@ py_library(
         "utils.py",
     ],
 )
+
+py_library(
+    name = "utils",
+    srcs = [
+        "utils.py",
+    ],
+)
