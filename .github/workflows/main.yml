@@ -26,6 +26,12 @@ jobs:
       
       - name: pwd
         run: pwd
+        
+      - name: ls -l
+        run: ls -l
+      
+      - name: unit test
+        run: bazel test //test:all
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
