@@ -63,7 +63,7 @@ class LayerTest(unittest.TestCase):
         self.assertAlmostEqual(layers[2]._w[2][0], 0.29583352646265637)
         self.assertAlmostEqual(layers[2]._w[0][1], -1.500004407641028)
         self.assertAlmostEqual(layers[2]._w[1][1], 0.12468100935893892)
-        self.assertAlmostEqual(layers[2]._w[2][1], 2.9162782838660672)
+        self.assertAlmostEqual(layers[2]._w[2][1], 0)
         # TODO: fill out the last layer's _w and _b assertion
 
 
