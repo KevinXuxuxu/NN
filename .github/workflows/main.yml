@@ -15,7 +15,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  unit-test:
     # The type of runner that the job will run on
     runs-on: self-hosted
 
@@ -26,4 +26,4 @@ jobs:
       
       # Run all unit tests
       - name: unit test
-        run: bazel test //test:all
+        run: bazel test //test:all --test_output=errors
