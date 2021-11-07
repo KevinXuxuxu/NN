@@ -1,5 +1,7 @@
 # NN
 
+![example branch parameter](https://github.com/KevinXuxuxu/NN/actions/workflows/main.yml/badge.svg?branch=main)
+
 Deep learning framework written with Python/Numpy for learning purpose.
 
 # Devops
