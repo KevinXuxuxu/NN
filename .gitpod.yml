@@ -1,6 +1,4 @@
 image: fzxu/nn
 tasks:
   - init: |
-      pwd
-    command: |
-      echo 'TODO: start app'
+      bazel test //test:all
