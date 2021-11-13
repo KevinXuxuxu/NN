@@ -1,0 +1,4 @@
+image: fzxu/nn
+tasks:
+  - init: |
+      bazel test //test:all
