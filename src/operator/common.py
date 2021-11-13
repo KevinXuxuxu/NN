@@ -53,3 +53,19 @@ class Bias(ParameterizedOperator):
         self._b -= self._rate * dL_db
         self.grad = dL_do
         super()._back_prop()
+
+
+class DataInput(Operator):
+
+    def __init__(self, data: np.ndarray):
+        self.output = data
+        super().__init__([], data.shape[1:])
+
+    def forward_pass(self):
+        self._forward_pass()
+
+    def _back_prop(self):
+        self.grad_on_data = self._aggregate_grad()
+
+    def add_pred(self, pred: 'Operator'):
+        raise Exception('Add pred is not supported for DataInput operator')

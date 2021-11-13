@@ -2,7 +2,7 @@ import numpy as np
 import unittest
 
 from src.operator.operator import Operator, ParameterizedOperator
-from src.operator.common import Bias, Linear
+from src.operator.common import Bias, Linear, DataInput
 from src.operator.activation import Sigmoid
 from src.operator.loss import MSE, CrossEntropy, CrossEntropyWithSoftmax
 from src.operator.normalizer import Softmax
@@ -51,10 +51,8 @@ class OperatorTest(unittest.TestCase):
         #                                                                  /
         #                                                    _ground_truth
         ParameterizedOperator.rate = 1.
-        _input = Operator([], [2])
-        _input.output = np.array([[.7, 2.]])
-        _ground_truth = Operator([], [2])
-        _ground_truth.output = np.array([[1., 0.]])
+        _input = DataInput(np.array([[.7, 2.]]))
+        _ground_truth = DataInput(np.array([[1., 0.]]))
         mm1 = Linear([2], [3])
         mm1._w = np.array([
             [.1, 2, -.7],
@@ -80,7 +78,7 @@ class OperatorTest(unittest.TestCase):
         a2.add_pred(b2)
         loss = MSE([2])
         loss.add_ground_truth(_ground_truth)
-        _ground_truth._forward_pass()
+        _ground_truth.forward_pass()
         loss.add_output(a2)
         return [_input, _ground_truth, mm1, b1, a1, mm2, b2, a2, loss]
 
@@ -96,7 +94,7 @@ class OperatorTest(unittest.TestCase):
         _input, _, _, b1, a1, _, b2, a2, _ = self._prepare_test_case()
 
         # forward pass
-        _input._forward_pass()
+        _input.forward_pass()
 
         # check result
         self._assert_matrices_equal(b1.output, np.array([[-9.93, 1.6, 2.51]]))
@@ -110,7 +108,7 @@ class OperatorTest(unittest.TestCase):
     def test_back_prop(self):
         # initialize
         _input, _, mm1, b1, _, mm2, b2, _, loss = self._prepare_test_case()
-        _input._forward_pass()
+        _input.forward_pass()
 
         # back prop
         loss._back_prop()
@@ -134,18 +132,16 @@ class OperatorTest(unittest.TestCase):
         # _input    _ground_truth
         #       \         \
         #        CrossEntropyWithSoftmax
-        _input = Operator([], [3])
-        _input.output = np.array([
+        _input = DataInput(np.array([
             [1, 4, 20],
             [4, 0.2, 7],
             [12, 13, 1.]
-        ])
-        _ground_truth = Operator([], [3])
-        _ground_truth.output = np.array([
+        ]))
+        _ground_truth = DataInput(np.array([
             [0, 0, 1.],
             [0, 1., 0],
             [1., 0, 0]
-        ])
+        ]))
         sm = Softmax()
         sm.add_pred(_input)
         ce = CrossEntropy([3])
@@ -154,8 +150,8 @@ class OperatorTest(unittest.TestCase):
         cewsm = CrossEntropyWithSoftmax([3])
         cewsm.add_output(_input)
         cewsm.add_ground_truth(_ground_truth)
-        _ground_truth._forward_pass()
-        _input._forward_pass()
+        _ground_truth.forward_pass()
+        _input.forward_pass()
         ce._back_prop()
         cewsm._back_prop()
 
