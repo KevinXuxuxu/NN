@@ -1,21 +1,5 @@
 tasks:
   - init: |
-      apt update \
-        && apt install -y curl git vim gnupg python3.8 python3.8-distutils\
-        && cd /usr/local/bin \
-        && ln -s /usr/bin/python3.8 python
-
-      curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-        && python get-pip.py \
-        && rm get-pip.py
-
-      pip install numpy notebook matplotlib
-
-      curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
-      mv bazel.gpg /etc/apt/trusted.gpg.d/
-      echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
-
-      apt update \
-        && apt install -y bazel
+      pwd
     command: |
       echo 'TODO: start app'
