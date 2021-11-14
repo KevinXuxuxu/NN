@@ -1,17 +1,23 @@
 FROM fzxu/nn
 
-RUN mkdir actions-runner && cd actions-runner \
-  && curl -o actions-runner-linux-x64-2.283.3.tar.gz -L https://github.com/actions/runner/releases/download/v2.283.3/actions-runner-linux-x64-2.283.3.tar.gz \
-  && tar xzf ./actions-runner-linux-x64-2.283.3.tar.gz
+RUN adduser --disabled-password --gecos "" actions-runner
+
+USER actions-runner
+
+RUN cd /home/actions-runner \
+  && curl -o actions-runner-linux-x64-2.284.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.284.0/actions-runner-linux-x64-2.284.0.tar.gz \
+  && tar xzf ./actions-runner-linux-x64-2.284.0.tar.gz
+
+USER root
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN cd /actions-runner && ./bin/installdependencies.sh
+RUN cd /home/actions-runner && ./bin/installdependencies.sh
 
-COPY scripts/config.sh /actions-runner/config.sh
+USER actions-runner
 
-COPY scripts/run.sh /actions-runner/run.sh
+ENV DEBIAN_FRONTEND=noninteractive
 
-WORKDIR /actions-runner
+WORKDIR /home/actions-runner
 
 ENTRYPOINT ./config.sh --url https://github.com/KevinXuxuxu/NN --token $TOKEN && ./run.sh
