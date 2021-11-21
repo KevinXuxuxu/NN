@@ -102,6 +102,7 @@ This project has a docker image [fzxu/nn](https://hub.docker.com/repository/dock
         - BN
     - Convolution/pooling layer
     - LSTM (?)
+    - Transformer
     - Utility operators: split, merge, flatten, etc.
 - Performance benchmark
 - Better unit/integration testing (how?)
