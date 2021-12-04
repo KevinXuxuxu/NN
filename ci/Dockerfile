@@ -1,4 +1,4 @@
-FROM fzxu/nn
+FROM fzxu/nn_x86_64
 
 RUN adduser --disabled-password --gecos "" actions-runner
 
@@ -17,6 +17,8 @@ RUN cd /home/actions-runner && ./bin/installdependencies.sh
 USER actions-runner
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+ENV PATH=$PATH:/srv/miniconda/bin
 
 COPY main.sh /home/actions-runner/main.sh
 
