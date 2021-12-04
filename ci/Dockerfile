@@ -18,6 +18,8 @@ USER actions-runner
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+COPY main.sh /home/actions-runner/main.sh
+
 WORKDIR /home/actions-runner
 
-ENTRYPOINT ./config.sh --url https://github.com/KevinXuxuxu/NN --token $TOKEN && ./run.sh
+ENTRYPOINT ./main.sh
