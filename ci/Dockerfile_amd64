@@ -1,4 +1,4 @@
-FROM fzxu/nn_x86_64
+FROM fzxu/nn
 
 RUN adduser --disabled-password --gecos "" actions-runner
 
