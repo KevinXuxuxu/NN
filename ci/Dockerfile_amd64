@@ -18,6 +18,8 @@ USER actions-runner
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+ENV PATH=$PATH:/srv/miniconda/bin
+
 COPY main.sh /home/actions-runner/main.sh
 
 WORKDIR /home/actions-runner
