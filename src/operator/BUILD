@@ -1,5 +1,6 @@
-package(default_visibility = ["//visibility:public"])
 load("@rules_python//python:defs.bzl", "py_library")
+
+package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "operator",
@@ -25,7 +26,7 @@ py_library(
         "activation.py",
     ],
     deps = [
-        ":operator"
+        ":operator",
     ],
 )
 

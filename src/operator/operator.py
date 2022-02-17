@@ -1,10 +1,9 @@
-import numpy as np
-
 from typing import List
+
+import numpy as np
 
 
 class Operator:
-
     def __init__(self, ishape: List[int], oshape: List[int]):
         self.ishape, self.oshape = tuple(ishape), tuple(oshape)
         self.preds, self.succs = [], []
@@ -32,7 +31,7 @@ class Operator:
             self._back_prop()
             self.back_prod_count = 0
 
-    def add_pred(self, pred: 'Operator'):
+    def add_pred(self, pred: "Operator"):
         self.preds.append(pred)
         pred.succs.append(self)
 

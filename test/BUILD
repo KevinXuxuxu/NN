@@ -1,5 +1,6 @@
-package(default_visibility = ["//visibility:public"])
 load("@rules_python//python:defs.bzl", "py_test")
+
+package(default_visibility = ["//visibility:public"])
 
 py_test(
     name = "layer_test",
@@ -21,10 +22,10 @@ py_test(
     name = "operator_test",
     srcs = ["operator_test.py"],
     deps = [
+        "//src/operator",
         "//src/operator:activation",
         "//src/operator:common",
         "//src/operator:loss",
         "//src/operator:normalizer",
-        "//src/operator:operator",
     ],
 )
