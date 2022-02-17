@@ -1,39 +1,28 @@
 import unittest
+from typing import List
+
 import numpy as np
 
-from typing import List
-from src.layer import Layer
 from src.cost import MSE
+from src.layer import Layer
 
 
 class LayerTest(unittest.TestCase):
-
     def _prepare_test_case(self) -> List[Layer]:
-        learning_rate = 1.
+        learning_rate = 1.0
         layers = [
             Layer(2, learning_rate),
             Layer(3, learning_rate),
-            Layer(2, learning_rate)
+            Layer(2, learning_rate),
         ]
         layers[2].connect(layers[1])
         layers[1].connect(layers[0])
         # initialization
-        layers[0].a = np.array([[.7, 2.]])
+        layers[0].a = np.array([[0.7, 2.0]])
         layers[1]._b = np.zeros(3)
-        layers[1]._w = np.array(
-            [
-                [.1, 2, -.7],
-                [-5, .1, 1.5]
-            ]
-        )
+        layers[1]._w = np.array([[0.1, 2, -0.7], [-5, 0.1, 1.5]])
         layers[2]._b = np.zeros(2)
-        layers[2]._w = np.array(
-            [
-                [.3, -1.5],
-                [1, .2],
-                [.2, 3]
-            ]
-        )
+        layers[2]._w = np.array([[0.3, -1.5], [1, 0.2], [0.2, 3]])
         return layers
 
     def test_forward_pass(self):
@@ -53,7 +42,7 @@ class LayerTest(unittest.TestCase):
     def test_back_prop(self):
         layers = self._prepare_test_case()
         layers[1].forward_pass()
-        y = np.array([[1., 0.]])
+        y = np.array([[1.0, 0.0]])
         a_grad = MSE.grad(layers[-1].a, y)
         layers[-1].back_prop(a_grad)
         self.assertAlmostEqual(layers[2]._b[0], 0.10362174841852187)
@@ -67,5 +56,5 @@ class LayerTest(unittest.TestCase):
         # TODO: fill out the last layer's _w and _b assertion
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

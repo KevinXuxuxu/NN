@@ -1,20 +1,20 @@
+from typing import List
+
 import numpy as np
 
-from typing import List
 from src.operator.operator import Operator, ParameterizedOperator
 from src.utils import check_shape
 
 
 class Linear(ParameterizedOperator):
-    
     def __init__(self, ishape: List[int], oshape: List[int]):
         super().__init__(ishape, oshape)
         # weights initialized to [-0.1, 0.1]
-        self._w = np.random.random((ishape[0], oshape[0])) / 5. - .1
+        self._w = np.random.random((ishape[0], oshape[0])) / 5.0 - 0.1
 
     def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
-            raise Exception('Multiple input not supported for Linear')
+            raise Exception("Multiple input not supported for Linear")
         check_shape(pred.oshape, self.ishape)
         super().add_pred(pred)
 
@@ -24,22 +24,21 @@ class Linear(ParameterizedOperator):
 
     def _back_prop(self):
         dL_do = self._aggregate_grad()
-        dL_dw = np.einsum('ki,kj', self.preds[0].output, dL_do)
-        self.grad = np.einsum('ik,jk', dL_do, self._w)
+        dL_dw = np.einsum("ki,kj", self.preds[0].output, dL_do)
+        self.grad = np.einsum("ik,jk", dL_do, self._w)
         self._w -= self._rate * dL_dw
         super()._back_prop()
 
 
 class Bias(ParameterizedOperator):
-
     def __init__(self, ishape: List[int], oshape: List[int]):
         super().__init__(ishape, oshape)
         # bias initialized to 0.1
-        self._b = np.ones(ishape) * .1
+        self._b = np.ones(ishape) * 0.1
 
     def add_pred(self, pred: Operator):
         if len(self.preds) == 1:
-            raise Exception('Multiple input not supported for bias')
+            raise Exception("Multiple input not supported for bias")
         check_shape(pred.oshape, self.ishape)
         super().add_pred(pred)
 
@@ -56,7 +55,6 @@ class Bias(ParameterizedOperator):
 
 
 class DataInput(Operator):
-
     def __init__(self, data: np.ndarray):
         self.output = data
         super().__init__([], data.shape[1:])
@@ -67,5 +65,5 @@ class DataInput(Operator):
     def _back_prop(self):
         self.grad_on_data = self._aggregate_grad()
 
-    def add_pred(self, pred: 'Operator'):
-        raise Exception('Add pred is not supported for DataInput operator')
+    def add_pred(self, pred: "Operator"):
+        raise Exception("Add pred is not supported for DataInput operator")

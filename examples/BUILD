@@ -1,5 +1,6 @@
-package(default_visibility = ["//visibility:public"])
 load("@rules_python//python:defs.bzl", "py_binary")
+
+package(default_visibility = ["//visibility:public"])
 
 py_binary(
     name = "jupyter",
@@ -7,12 +8,12 @@ py_binary(
         "jupyter.py",
     ],
     deps = [
+        "//data/MNIST:mnist_csv_loader",
+        "//src:nn_src",
+        "//src/operator",
         "//src/operator:activation",
         "//src/operator:common",
         "//src/operator:loss",
         "//src/operator:normalizer",
-        "//src/operator:operator",
-        "//src:nn_src",
-        "//data/MNIST:mnist_csv_loader"
     ],
 )
